@@ -1,0 +1,59 @@
+# Builds the app on Windows: the Kotlin code with JetBrains Runtime 21, packed with JetBrains Runtime 25 (which runs it)
+# and the ZayitSubset.exe launcher into a zip; on a v* tag publishes a release with it.
+name: Build
+
+on:
+  push:
+    branches: [main]
+    tags: ['v*']
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # The last version listed becomes JAVA_HOME, which runs Gradle
+      - name: JetBrains Runtime 25 and 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: jetbrains
+          java-version: |
+            25
+            21
+
+      - name: Build
+        shell: pwsh
+        run: ./gradlew.bat --console=plain appLibs "-Porg.gradle.java.installations.paths=$env:JAVA_HOME_21_X64" "-Pjbr25=$env:JAVA_HOME_25_X64"
+
+      - name: Pack the app
+        shell: pwsh
+        run: |
+          $out = 'dist/Zayit Subset'
+          New-Item -ItemType Directory -Force $out | Out-Null
+          Copy-Item build/app/lib "$out/lib" -Recurse
+          Copy-Item $env:JAVA_HOME_25_X64 "$out/runtime" -Recurse
+          foreach ($x in 'jmods', 'include', 'demo', 'lib/src.zip') { Remove-Item "$out/runtime/$x" -Recurse -Force -ErrorAction SilentlyContinue }
+          & "$env:WINDIR\Microsoft.NET\Framework64\v4.0.30319\csc.exe" /nologo /codepage:65001 /optimize+ /target:winexe /platform:x64 `
+            /win32icon:src/main/resources/drawable/app.ico "/out:$out/ZayitSubset.exe" launcher/Launcher.cs
+          if ($LASTEXITCODE) { throw 'launcher build failed' }
+          Copy-Item LICENSE, README.md $out
+          7z a -tzip -mx=7 dist/ZayitSubset-windows-x64.zip "./dist/Zayit Subset" | Out-Null
+          Get-Item dist/ZayitSubset-windows-x64.zip | ForEach-Object { '{0} ({1:N0} MB)' -f $_.Name, ($_.Length / 1MB) }
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ZayitSubset-windows-x64
+          path: dist/ZayitSubset-windows-x64.zip
+
+      - name: Release
+        if: startsWith(github.ref, 'refs/tags/v')
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release create "$GITHUB_REF_NAME" dist/ZayitSubset-windows-x64.zip --title "ספרייה מוקטנת לזית $GITHUB_REF_NAME" --notes-file .github/release-notes.md

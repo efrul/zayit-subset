@@ -1,0 +1,12 @@
+# build output and local caches
+build/
+.gradle/
+.kotlin/
+dist/
+.idea/
+*.iml
+local.properties
+# the earlier WPF version and local screenshots stay out of the repository
+old-wpf/
+/screenshot.png
+/zayit-on-sd.png

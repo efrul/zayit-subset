@@ -1,0 +1,31 @@
+# Versions as in Zayit 0.6.4 (kdroidFilter/Zayit gradle/libs.versions.toml), where the module exists there.
+[versions]
+kotlin = "2.4.20"
+compose = "1.12.0"
+jewel = "0.41.0-262.10968.63"
+kotlinx-coroutines = "1.11.0"
+kotlinx-serialization = "1.10.0"
+filekit = "0.16.0"
+lucene = "10.5.2"
+sqlite-jdbc = "3.50.3.0"
+intellijPlatformIcons = "262.10968.63"
+
+[libraries]
+jewel-int-ui-standalone = { module = "org.jetbrains.jewel:jewel-int-ui-standalone", version.ref = "jewel" }
+jewel-int-ui-decorated-window = { module = "org.jetbrains.jewel:jewel-int-ui-decorated-window", version.ref = "jewel" }
+kotlinx-coroutines-swing = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-swing", version.ref = "kotlinx-coroutines" }
+filekit-dialogs-compose = { module = "io.github.vinceglb:filekit-dialogs-compose", version.ref = "filekit" }
+lucene-core = { module = "org.apache.lucene:lucene-core", version.ref = "lucene" }
+sqlite-jdbc = { module = "org.xerial:sqlite-jdbc", version.ref = "sqlite-jdbc" }
+
+intellij-platform-icons = { module = "com.jetbrains.intellij.platform:icons", version.ref = "intellijPlatformIcons" }
+intellij-platform-icons-api = { module = "com.jetbrains.intellij.platform:icons-api", version.ref = "intellijPlatformIcons" }
+intellij-platform-icons-impl = { module = "com.jetbrains.intellij.platform:icons-impl", version.ref = "intellijPlatformIcons" }
+
+kotlinx-serialization-protobuf = { module = "org.jetbrains.kotlinx:kotlinx-serialization-protobuf", version.ref = "kotlinx-serialization" }
+
+[plugins]
+kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
+kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
+kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
+compose = { id = "org.jetbrains.compose", version.ref = "compose" }
