@@ -39,8 +39,9 @@ jobs:
           Copy-Item build/app/lib "$out/lib" -Recurse
           Copy-Item $env:JAVA_HOME_25_X64 "$out/runtime" -Recurse
           foreach ($x in 'jmods', 'include', 'demo', 'lib/src.zip') { Remove-Item "$out/runtime/$x" -Recurse -Force -ErrorAction SilentlyContinue }
+          # The .NET Framework compiler reads '/' in a file name as the start of an option: backslashes only
           & "$env:WINDIR\Microsoft.NET\Framework64\v4.0.30319\csc.exe" /nologo /codepage:65001 /optimize+ /target:winexe /platform:x64 `
-            /win32icon:src/main/resources/drawable/app.ico "/out:$out/ZayitSubset.exe" launcher/Launcher.cs
+            "/win32icon:src\main\resources\drawable\app.ico" "/out:dist\Zayit Subset\ZayitSubset.exe" "launcher\Launcher.cs"
           if ($LASTEXITCODE) { throw 'launcher build failed' }
           Copy-Item LICENSE, README.md $out
           7z a -tzip -mx=7 dist/ZayitSubset-windows-x64.zip "./dist/Zayit Subset" | Out-Null
