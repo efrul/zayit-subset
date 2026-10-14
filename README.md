@@ -65,7 +65,7 @@ powershell -ExecutionPolicy Bypass -File install.ps1   # בנייה והתקנה
 
 את המיקום של JBR 21 Gradle מוצא דרך `org.gradle.java.installations.paths` ב־`gradle.properties`.
 
-כל דחיפה נבנית ב־GitHub Actions. תג `v*` (למשל `v1.0.0`) מפרסם Release עם קובץ ה־zip.
+הבנייה ב־GitHub Actions רצה רק כשמפעילים אותה: לשונית Actions ← Build ← Run workflow. עם מספר גרסה (למשל `v1.0.1`) היא בונה ומפרסמת Release עם קובץ ה־zip. בלי מספר גרסה היא רק בונה.
 
 ## מבנה הפרויקט
 
